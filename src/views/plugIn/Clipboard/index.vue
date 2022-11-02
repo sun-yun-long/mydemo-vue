@@ -1,18 +1,25 @@
 <template>
-  <div class="countTo_out">
-    <div>
-      {{ txt }}
-    </div>
-    <button class="tag-read" :data-clipboard-text="txt" @click="copy">复制</button>
+  <div class="clipboard_out">
+    <el-card class="box-card">
+      <div slot="header" class="clearfix">
+        <span>卡片名称</span>
+        <el-button style="float: right; padding: 3px 0" type="text" :data-clipboard-text="txt" class="tag-read" @click="copy">复制</el-button>
+      </div>
+      <div class="box">
+        {{ txt }}
+      </div>
+    </el-card>
   </div>
 </template>
 
 <script>
 import Clipboard from "clipboard";
 export default {
+  name: "clipboard",
   data() {
     return {
-      txt: "qqshiqhsiqhsiqshqshqishiqhsi"
+      txt: "测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本" +
+        "测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本测试文本"
     };
   },
   methods: {
@@ -43,3 +50,10 @@ export default {
   }
 };
 </script>
+
+<style lang="less" scoped>
+.box-card{
+  width: 500px;
+  margin: 0 auto;
+}
+</style>
