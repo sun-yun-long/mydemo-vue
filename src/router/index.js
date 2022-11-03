@@ -102,6 +102,12 @@ const routes = [
         name: '表格',
         component: () => import("@/views/demo/table"),
       },
+      {
+        id: '0403',
+        path: 'iframe-html',
+        name: '引入html',
+        component: () => import("@/views/demo/iframe-html"),
+      },
     ]
   },
   

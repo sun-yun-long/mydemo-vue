@@ -1,10 +1,3 @@
-<!--
- * @Description: 
- * @Author: 
- * @Date: 2022-03-10 17:00:58
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-11-02 15:02:01
--->
 <template>
   <div id="app" style="height: 100%">
     <el-container style="height: 100%">
