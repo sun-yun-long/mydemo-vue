@@ -96,6 +96,12 @@ const routes = [
         name: '列表',
         component: () => import("@/views/demo/list"),
       },
+      {
+        id: '0402',
+        path: 'table',
+        name: '表格',
+        component: () => import("@/views/demo/table"),
+      },
     ]
   },
   
