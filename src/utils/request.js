@@ -11,7 +11,6 @@ const request = axios.create({
   // 默认请求路径
   baseURL: "/api/", // vip联调
   // baseURL: _url, // 打包更换
-  // baseURL: 'http://192.168.10.159:8080/ann/', // like联调
   // 请求超时时间（30s内没响应就失败了）
   timeout: 30000,
 });
