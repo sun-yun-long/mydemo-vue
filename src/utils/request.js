@@ -11,7 +11,7 @@ const request = axios.create({
   // 默认请求路径
   baseURL: "/api/", // vip联调
   // baseURL: _url, // 打包更换
-  // 请求超时时间（30s内没响应就失败了）
+  // 请求超时时间 （30s内没响应就失败了）
   timeout: 30000,
 });
 
