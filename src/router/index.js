@@ -108,6 +108,12 @@ const routes = [
         name: '引入html',
         component: () => import("@/views/demo/iframe-html"),
       },
+      {
+        id: '0404',
+        path: 'vxe-table',
+        name: 'vxe-table 高级筛选',
+        component: () => import("@/views/demo/vxe-table"),
+      },
     ]
   },
   
