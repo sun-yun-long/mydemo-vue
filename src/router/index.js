@@ -114,6 +114,19 @@ const routes = [
         name: 'vxe-table 高级筛选',
         component: () => import("@/views/demo/vxe-table"),
       },
+      {
+        id: '0405',
+        path: 'vxe-download',
+        name: 'vxe-download',
+        component: () => import("@/views/demo/vxe-download"),
+      },
+      {
+        id: '0406',
+        path: 'cube',
+        name: 'cube',
+        title: "立方体",
+        component: () => import("@/views/demo/cube"),
+      },
     ]
   },
   
