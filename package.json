@@ -14,9 +14,11 @@
     "clipboard": "^2.0.8",
     "core-js": "^3.6.5",
     "dd-ui-library": "^1.0.14",
+    "echarts": "^5.4.0",
     "element-ui": "^2.15.6",
     "font-awesome": "^4.7.0",
     "handsontable": "^8.3.2",
+    "lodash": "^4.17.21",
     "pdfjs-dist": "2.2.228",
     "qs": "^6.11.0",
     "vue": "2.5.17",
@@ -39,6 +41,7 @@
     "copy-webpack-plugin": "4.5.2",
     "less": "^3.0.4",
     "less-loader": "^5.0.0",
+    "resize-observer-polyfill": "^1.5.1",
     "vue-template-compiler": "2.5.17"
   },
   "browserslist": [

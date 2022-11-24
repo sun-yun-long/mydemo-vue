@@ -127,6 +127,13 @@ const routes = [
         title: "立方体",
         component: () => import("@/views/demo/cube"),
       },
+      {
+        id: '0407',
+        path: 'chart-paging',
+        name: 'chart-paging',
+        title: "chart-paging",
+        component: () => import("@/views/demo/chart-paging"),
+      },
     ]
   },
   
