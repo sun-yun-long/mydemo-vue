@@ -134,6 +134,13 @@ const routes = [
         title: "chart-paging",
         component: () => import("@/views/demo/chart-paging"),
       },
+      {
+        id: '0408',
+        path: 'descartes',
+        name: 'descartes',
+        title: "笛卡尔集数据转换",
+        component: () => import("@/views/demo/descartes"),
+      },
     ]
   },
   
