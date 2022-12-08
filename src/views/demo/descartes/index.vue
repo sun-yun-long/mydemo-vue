@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-12-08 10:50:09
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-12-08 13:38:59
+ * @LastEditTime: 2022-12-08 14:01:56
 -->
 
 <template>
@@ -72,10 +72,10 @@ export default {
       let list = [];
       columns.forEach((item) => {
         let row = {};
+        row.fundName = item.title;
         sourceData.forEach((ite) => {
           if (item.field === ite.FUNDCODE1) {
             row[ite.FUNDCODE2] = ite.ZHXGXS;
-            row.fundName = ite.FUNDNAME;
           }
         });
         list.push(row);
