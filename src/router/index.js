@@ -62,6 +62,12 @@ const routes = [
         name: 'clipboard',
         component: () => import('@/views/plugIn/Clipboard')
       },
+      {
+        id: '0207',
+        path: 'pinyin-match',
+        name: 'pinyin-match',
+        component: () => import('@/views/plugIn/pinyin-match')
+      },
     ]
   },
   {
