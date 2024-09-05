@@ -1,51 +1,83 @@
+// 注释的代码是在调用组件里面写的  用于调用传参
+//mounted() {
+//要加水印的地方的ref是set函数的第2个参数
+//   watermark.set(this.loginName,this.$refs.hello);
+//   console.log(watermark)
+//  },
+// computed: {
+//   showDistributionAgencyName: function () {
+//    let str = this.comprehensiveQueryForm.distributionAgencyName.join(', ');
+//    return str;
+//   },
+//   ...mapGetters(['loginName'])  //必须写在computed里面
+//  },
 'use strict'
  
-let watermark = {}
+const watermark = {}
  
-let setWatermark = (str) => {
-  let id = '1.23452384164.123412415'
+/**
+ *
+ * @param {要设置的水印的内容} str
+ * @param {需要设置水印的容器} container
+ */
+// 禁止复制文本
+document.onselectstart = function () { return false; }
+const setWatermark = (str, container) => {
+ const id = '1.23452384164.123412415'
  
-  if (document.getElementById(id) !== null) {
-    document.body.removeChild(document.getElementById(id))
-  }
+ if (container === undefined) {
+  return
+ }
+ // 查看页面上有没有，如果有则删除
+ if (document.getElementById(id) !== null) {
+  const childelement = document.getElementById(id)
+  childelement.parentNode.removeChild(childelement)
+ }
  
-  let can = document.createElement('canvas')
-  can.width = 150
-  can.height = 120
+ var containerWidth = container.offsetWidth // 获取父容器宽
+ var containerHeight = container.offsetHeight // 获取父容器高
+ container.style.position = 'relative' // 设置布局为相对布局
+ // 创建canvas元素(先制作一块背景图)
+ const can = document.createElement('canvas')
+ can.width = 180 // 设置每一块的宽度
+ can.height = 80 // 高度
+ const cans = can.getContext('2d') // 获取canvas画布
+ cans.rotate(-20 * Math.PI / 180) // 逆时针旋转π/9
+ cans.font = '20px Vedana' // 设置字体
+ cans.fillStyle = 'rgba(200, 200, 200, 0.5)' // 设置字体的颜色
+ cans.textAlign = 'left' // 文本对齐方式
+ cans.textBaseline = 'Middle' // 文本基线
+ cans.fillText(str, 0, 4 * can.height / 5) // 绘制文字
  
-  let cans = can.getContext('2d')
-  cans.rotate(-20 * Math.PI / 180)
-  cans.font = '20px Vedana'
-  cans.fillStyle = 'rgba(200, 200, 200, 0.20)'
-  cans.textAlign = 'left'
-  cans.textBaseline = 'Middle'
-  cans.fillText(str, can.width / 3, can.height / 2)
+ // 创建一个div元素
+ const div = document.createElement('div')
+ div.id = id // 设置id
+ div.style.pointerEvents = 'none' // 取消所有事件
+ div.style.top = '0px'
+ div.style.left = '0px'
+ // div.style.opacity=1    //调节字体颜色的深浅
+ div.style.position = 'absolute'
+ div.style.zIndex = '100000'
+ div.style.width = containerWidth + 'px'
+ div.style.height = containerHeight + 'px'
+ div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
+ container.appendChild(div) // 追加到页面
  
-  let div = document.createElement('div')
-  div.id = id
-  div.style.pointerEvents = 'none'
-  div.style.top = '70px'
-  div.style.left = '0px'
-  div.style.position = 'fixed'
-  div.style.zIndex = '100000'
-  div.style.width = document.documentElement.clientWidth - 100 + 'px'
-  div.style.height = document.documentElement.clientHeight - 100 + 'px'
-  div.style.background = 'url(' + can.toDataURL('image/png') + ') left top repeat'
-  document.body.appendChild(div)
-  return id
+ return id
 }
  
 // 该方法只允许调用一次
-watermark.set = (str) => {
-  let id = setWatermark(str)
-  setInterval(() => {
-    if (document.getElementById(id) === null) {
-      id = setWatermark(str)
-    }
-  }, 500)
-  window.onresize = () => {
-    setWatermark(str)
+watermark.set = (str, container) => {
+ let id = setWatermark(str, container)
+ setInterval(() => {
+  if (document.getElementById(id) === null) {
+   id = setWatermark(str, container)
   }
+ }, 500)
+ // 监听页面大小的变化
+ window.onresize = () => {
+  setWatermark(str, container)
+ }
 }
  
 export default watermark

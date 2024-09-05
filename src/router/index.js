@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: 
+ * @Date: 2022-11-07 10:52:01
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-27 15:58:14
+ */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
@@ -68,6 +75,18 @@ const routes = [
         name: 'pinyin-match',
         component: () => import('@/views/plugIn/pinyin-match')
       },
+      {
+        id: '0208',
+        path: 'vue-splitpane',
+        name: 'vue-splitpane',
+        component: () => import('@/views/plugIn/vue-splitpane')
+      },
+      {
+        id: '0209',
+        path: 'element-resize-detector',
+        name: 'element-resize-detector',
+        component: () => import('@/views/plugIn/element-resize-detector')
+      },
     ]
   },
   {
@@ -87,6 +106,12 @@ const routes = [
         path: 'zsgc',
         name: 'zsgc',
         component: () => import("@/views/game/zsgc"),
+      },
+      {
+        id: '0303',
+        path: 'tetris',
+        name: 'tetris',
+        component: () => import("@/views/game/tetris"),
       },
     ]
   },
@@ -146,6 +171,55 @@ const routes = [
         name: 'descartes',
         title: "笛卡尔集数据转换",
         component: () => import("@/views/demo/descartes"),
+      },
+      {
+        id: '0409',
+        path: 'positionStyleSituation',
+        name: 'positionStyleSituation',
+        title: "持仓风格情况",
+        component: () => import("@/views/demo/positionStyleSituation"),
+      },
+      {
+        id: '0410',
+        path: 'touzijingli',
+        name: 'touzijingli',
+        title: "持仓风格情况",
+        component: () => import("@/views/demo/touzijingli"),
+      },
+      {
+        id: '0411',
+        path: 'excelTxt',
+        name: 'excelTxt',
+        title: "excel复制文本解析",
+        component: () => import("@/views/demo/excelTxt"),
+      },
+      {
+        id: '0412',
+        path: 'treeTableDrag',
+        name: 'treeTableDrag',
+        title: "树形表格拖拽排序",
+        component: () => import("@/views/demo/treeTableDrag"),
+      },
+      {
+        id: '0413',
+        path: 'el-tree-filter',
+        name: 'el-tree-filter',
+        title: "tree筛选",
+        component: () => import("@/views/demo/el-tree"),
+      },
+      {
+        id: '0414',
+        path: 'el-tree-drag',
+        name: 'el-tree-drag',
+        title: "tree拖拽",
+        component: () => import("@/views/demo/el-tree/drag.vue"),
+      },
+      {
+        id: '0415',
+        path: 'chechboxTable',
+        name: 'chechboxTable',
+        title: "chechboxTable",
+        component: () => import("@/views/demo/chechboxTable"),
       },
     ]
   },

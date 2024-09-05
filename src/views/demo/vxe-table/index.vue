@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-07 10:32:47
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-11-07 10:41:08
+ * @LastEditTime: 2022-11-07 15:02:23
 -->
 <template>
   <div class="vxe-table-view">
@@ -64,7 +64,11 @@ export default {
       ]
     };
   },
-  mounted() {},
+  mounted() {
+    // console.log(this.$children);
+    // console.log(this.$children.length);
+    console.log(this);
+  },
   methods: {}
 };
 </script>

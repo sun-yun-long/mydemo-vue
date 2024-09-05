@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-11 10:30:37
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-11-11 11:12:47
+ * @LastEditTime: 2022-11-11 16:04:20
 -->
 <template>
   <div>
@@ -56,32 +56,32 @@ export default {
 }
 .top {
   background-color: rgb(18, 196, 136);
-  transform: translateZ(150px);
+  transform: translateZ(50px);
 }
 
 .bottom {
   background-color: rgb(70, 147, 209);
-  transform: translateZ(-150px);
+  transform: translateZ(-50px);
 }
 
 .left {
   background-color: rgb(189, 79, 112);
-  transform: translateX(-150px) rotateY(90deg);
+  transform: translateX(-50px) rotateY(90deg);
 }
 
 .right {
   background-color: rgb(59, 212, 59);
-  transform: translateX(150px) rotateY(90deg);
+  transform: translateX(50px) rotateY(90deg);
 }
 
 .before {
   background-color: rgb(158, 136, 64);
-  transform: translateY(150px) rotateX(90deg);
+  transform: translateY(50px) rotateX(90deg);
 }
 
 .after {
   background-color: rgb(9, 82, 57);
-  transform: translateY(-150px) rotateX(90deg);
+  transform: translateY(-50px) rotateX(90deg);
 }
 
 @keyframes move {

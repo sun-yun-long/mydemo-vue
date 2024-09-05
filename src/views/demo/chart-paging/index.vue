@@ -46,6 +46,15 @@
         </el-card>
       </el-col>
     </el-row>
+    <div style="width: 300px; height: 300px">
+      <MyChart
+        id="chartPaging_chart3"
+        ref="chartPaging_chart3"
+        :options="testOption3"
+        resize-dom="ddia"
+        style="height: 300px; width: auto"
+      />
+    </div>
   </div>
 </template>
 
@@ -61,6 +70,7 @@ export default {
     return {
       testOption: CONSTANTS.CHART_OPTION,
       testOption2: CONSTANTS.CHART_OPTION2,
+      testOption3: CONSTANTS.CHART_OPTION3,
       total: CONSTANTS.dataX.length,
       pageSize: 3
     };

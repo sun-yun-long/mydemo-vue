@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: 
+ * @Date: 2022-11-02 15:41:39
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-21 09:27:32
+ */
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'

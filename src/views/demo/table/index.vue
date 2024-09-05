@@ -1,5 +1,13 @@
+<!--
+ * @Description: 
+ * @Author: 
+ * @Date: 2022-11-03 09:08:29
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-20 14:02:05
+-->
 <template>
   <div class="table_view">
+    <qunji-button :showLoading='false'>打开alert</qunji-button>
     <h3>点击指定区域单元格触发事件</h3> <br>
     <el-table
       :data="tableData"
@@ -16,7 +24,9 @@
 </template>
 
 <script>
+// import methods from ''
 export default {
+  // mixins: [methods],
   data() {
     return {
       tableData: [
@@ -45,12 +55,19 @@ export default {
   },
   methods: {
     cellStyle({ row, column, rowIndex, columnIndex }) {
+      let classNames = []
       const propertyList = ["date", "name"];
       if (propertyList.includes(column.property)) {
-        return "pointer";
+        // return "pointer";
+        classNames.push("pointer")
       }
+      if(column.property === 'date'){
+        classNames.push("red")
+      }
+      return classNames.join(" ")
     },
     tableClick(e) {
+      console.log(e);
       if (e.target && e.target.className === "cell") {
         try {
           if (e.target.parentNode.className.indexOf("pointer") !== -1) {
