@@ -21,6 +21,7 @@
           border
           :span-method="objectSpanMethod"
           :header-cell-style="headerCellStyle"
+          stripe
         >
           <el-table-column
             prop="propa"

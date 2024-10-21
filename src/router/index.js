@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-07 10:52:01
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-27 15:58:14
+ * @LastEditTime: 2024-10-21 10:04:23
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -87,6 +87,18 @@ const routes = [
         name: 'element-resize-detector',
         component: () => import('@/views/plugIn/element-resize-detector')
       },
+      {
+        id: '0210',
+        path: 'vue-flowy',
+        name: 'vue-flowy',
+        component: () => import('@/views/plugIn/vue-flowy')
+      },
+      {
+        id: '0211',
+        path: 'diff',
+        name: 'diff',
+        component: () => import('@/views/plugIn/diff')
+      },
     ]
   },
   {
@@ -112,6 +124,12 @@ const routes = [
         path: 'tetris',
         name: 'tetris',
         component: () => import("@/views/game/tetris"),
+      },
+      {
+        id: '0304',
+        path: 'zhizhu',
+        name: 'zhizhu',
+        component: () => import("@/views/game/zhizhu"),
       },
     ]
   },
@@ -220,6 +238,20 @@ const routes = [
         name: 'chechboxTable',
         title: "chechboxTable",
         component: () => import("@/views/demo/chechboxTable"),
+      },
+      {
+        id: '0416',
+        path: 'workFlowList',
+        name: 'workFlowList',
+        title: "workFlowList",
+        component: () => import("@/views/demo/workFlowList"),
+      },
+      {
+        id: '0417',
+        path: 'photoCard',
+        name: 'photoCard',
+        title: "photoCard",
+        component: () => import("@/views/demo/photoCard"),
       },
     ]
   },

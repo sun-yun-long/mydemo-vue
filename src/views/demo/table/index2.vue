@@ -1,95 +1,101 @@
 <!--
  * @Description: 
  * @Author: 
- * @Date: 2023-11-17 09:37:00
- * @LastEditors: 
- * @LastEditTime: 2023-11-17 09:37:20
+ * @Date: 2022-11-03 09:08:29
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2023-11-20 14:02:05
 -->
 <template>
-  <div>
-
+  <div class="table_view">
+    <qunji-button :showLoading='false'>打开alert</qunji-button>
+    <h3>点击指定区域单元格触发事件</h3> <br>
+    <el-table
+      :data="tableData"
+      border
+      style="width: 100%"
+      :cell-class-name="cellStyle"
+      @click.native="tableClick($event)"
+    >
+      <el-table-column prop="date" label="日期" width="180"> </el-table-column>
+      <el-table-column prop="name" label="姓名" width="180" class-name=""> </el-table-column>
+      <el-table-column prop="address" label="地址"> </el-table-column>
+    </el-table>
   </div>
 </template>
 
 <script>
+// import methods from ''
 export default {
-  name: '',
-  components: {},
-  data () {
+  // mixins: [methods],
+  data() {
     return {
-      columnOption: [
+      tableData: [
         {
-          title: "券商名称",
-          prop: "VC_NAME",
-          align: "center"
+          date: "2016-05-02",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1518 弄"
         },
         {
-          title: "基金交易",
-          option: [
-            {
-              title: "成交金额",
-              prop: "F_JJJYJE",
-              align: "right"
-            },
-            {
-              title: "占当期基金成交总额的比例",
-              prop: "VC_JJJYBL",
-              align: "right"
-            }
-          ]
+          date: "2016-05-04",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1517 弄"
         },
         {
-          title: "债券交易",
-          option: [
-            {
-              title: "成交金额",
-              prop: "F_ZQJYJE",
-              align: "right"
-            },
-            {
-              title: "占当期债券成交总额的比例",
-              prop: "VC_ZQJYBL",
-              align: "right"
-            }
-          ]
+          date: "2016-05-01",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1519 弄"
         },
         {
-          title: "债券回购交易",
-          option: [
-            {
-              title: "成交金额",
-              prop: "F_HGJE",
-              align: "right"
-            },
-            {
-              title: "占当期债券回购交易成交总额的比例",
-              prop: "VC_HGBL",
-              align: "right"
-            }
-          ]
-        },
-        {
-          title: "权证交易",
-          option: [
-            {
-              title: "成交金额",
-              prop: "F_QZJQJE",
-              align: "right"
-            },
-            {
-              title: "占当期权证交易成交总额的比例",
-              prop: "VC_QZJYBL",
-              align: "right"
-            }
-          ]
+          date: "2016-05-03",
+          name: "王小虎",
+          address: "上海市普陀区金沙江路 1516 弄"
         }
-      ],
-    }
+      ]
+    };
   },
-  mounted() {},
-  methods: {},
-}
-
+  methods: {
+    cellStyle({ row, column, rowIndex, columnIndex }) {
+      let classNames = []
+      const propertyList = ["date", "name"];
+      if (propertyList.includes(column.property)) {
+        // return "pointer";
+        classNames.push("pointer")
+      }
+      if(column.property === 'date'){
+        classNames.push("red")
+      }
+      return classNames.join(" ")
+    },
+    tableClick(e) {
+      console.log(e);
+      if (e.target && e.target.className === "cell") {
+        try {
+          if (e.target.parentNode.className.indexOf("pointer") !== -1) {
+            console.log("open");
+            alert("open")
+          }
+        } catch (error) {
+          return false;
+        }
+      } else {
+        try {
+          if (e.target.className.indexOf("pointer") !== -1) {
+            console.log("open");
+            alert("open")
+          }
+        } catch (error) {
+          return false;
+        }
+      }
+    }
+  }
+};
 </script>
-<style scoped lang='scss'>
+
+<style lang="less">
+.table_view{
+  .pointer {
+    cursor: pointer;
+  }
+}
 </style>

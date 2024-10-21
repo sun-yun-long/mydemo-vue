@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-02 15:41:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-21 09:27:32
+ * @LastEditTime: 2024-10-17 13:08:08
  */
 import Vue from 'vue'
 import App from './App.vue'
@@ -26,6 +26,13 @@ import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 import TreeTable from 'vue-table-with-tree-grid'
 
+// 以下为bpmn工作流绘图工具的样式
+import "bpmn-js/dist/assets/diagram-js.css"; // 左边工具栏以及编辑节点的样式
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn-codes.css";
+import "bpmn-js/dist/assets/bpmn-font/css/bpmn-embedded.css";
+import "bpmn-js-properties-panel/dist/assets/bpmn-js-properties-panel.css"; // 右边工具栏样式
+
 // import './utils/render/filter'
 
 import format from 'vue-text-format'
@@ -44,6 +51,10 @@ import Print from 'vue-print-nb'
 Vue.use(Print); //注册
 
 Vue.component('tree-table', TreeTable)
+
+import VueFlowy from 'vue-flowy';
+ 
+Vue.use(VueFlowy);
 
 Vue.use(DataDriverUI);
 Vue.use(ElementUI);
