@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECharts Timeline 示例</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5"></script>
+</head>
+<body>
+    <div id="main" style="width: 600px;height:400px;"></div>
+    <script type="text/javascript">
+        var chart = echarts.init(document.getElementById('main'));
+
+        var dates = ['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05'];
+        var data1 = [120, 132, 101, 134, 90];
+        var data2 = [220, 182, 191, 234, 290];
+
+        var option = {
+            title: {
+                text: '使用 Timeline 动态展示数据'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['系列1', '系列2']
+            },
+            xAxis: {
+                type: 'category',
+                data: dates
+            },
+            yAxis: {
+                type: 'value'
+            },
+            timeline: {
+                axisType: 'category',  // 设置时间轴轴类型为类目型
+                autoPlay: true,  // 自动播放
+                playInterval: 1000,  // 播放间隔时间（1秒）
+                data: dates,  // 设置时间轴显示的日期
+                left: 10,
+                right: 10
+            },
+            series: [
+                {
+                    name: '系列1',
+                    type: 'line',
+                    data: data1,
+                    smooth: true
+                },
+                {
+                    name: '系列2',
+                    type: 'line',
+                    data: data2,
+                    smooth: true
+                }
+            ]
+        };
+
+        chart.setOption(option);
+    </script>
+</body>
+</html>

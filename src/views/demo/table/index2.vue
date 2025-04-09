@@ -3,11 +3,11 @@
  * @Author: 
  * @Date: 2022-11-03 09:08:29
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-20 14:02:05
+ * @LastEditTime: 2025-02-22 15:54:32
 -->
 <template>
   <div class="table_view">
-    <qunji-button :showLoading='false'>打开alert</qunji-button>
+    <!-- <qunji-button :showLoading='false'>打开alert</qunji-button> -->
     <h3>点击指定区域单元格触发事件</h3> <br>
     <el-table
       :data="tableData"

@@ -3,12 +3,15 @@
  * @Author: 
  * @Date: 2023-02-22 16:13:17
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-02-22 16:22:08
+ * @LastEditTime: 2025-04-09 11:02:07
  */
 import PinyinMatch from "pinyin-match";
-export function pinyingSubs(val, label, arr, copy) {
+import _ from "lodash";
+export function pinyingSubs(val, { label, value }, data) {
+  data = _.cloneDeep(data);
+  let showData = [];
   if (val) {
-    return arr = copy.filter((item) => {
+    showData = data.filter((item) => {
       if (item[label]) {
         if (item[label].toUpperCase().indexOf(val.toUpperCase()) != -1) {
           return true;
@@ -16,8 +19,25 @@ export function pinyingSubs(val, label, arr, copy) {
         return PinyinMatch.match(item[label], val);
       }
     });
+    const showCodeArr = showData.map((item) => item[value]);
+    if (showCodeArr.length) {
+      for (let i = 0; i < data.length; i++) {
+        if (!showCodeArr.includes(data[i][value])) {
+          data[i].hidden = true;
+        } else {
+          data[i].hidden = false;
+        }
+      }
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        data[i].hidden = true;
+      }
+    }
   } else {
-    return arr = copy;
+    for (let i = 0; i < data.length; i++) {
+      data[i].hidden = false;
+    }
   }
+  return data;
 }
 

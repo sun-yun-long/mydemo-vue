@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-07 10:52:01
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2024-10-21 10:04:23
+ * @LastEditTime: 2025-04-09 15:23:00
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -99,6 +99,18 @@ const routes = [
         name: 'diff',
         component: () => import('@/views/plugIn/diff')
       },
+      {
+        id: '0212',
+        path: 'Kindeditor',
+        name: 'Kindeditor',
+        component: () => import('@/views/plugIn/Kindeditor')
+      },
+      {
+        id: '0213',
+        path: 'tinymce',
+        name: 'tinymce',
+        component: () => import('@/views/plugIn/Tinymce')
+      },
     ]
   },
   {
@@ -131,6 +143,12 @@ const routes = [
         name: 'zhizhu',
         component: () => import("@/views/game/zhizhu"),
       },
+      {
+        id: '0305',
+        path: 'fanpai',
+        name: 'fanpai',
+        component: () => import("@/views/game/fanpai"),
+      },
     ]
   },
   {
@@ -148,7 +166,7 @@ const routes = [
       {
         id: '0402',
         path: 'table',
-        name: '表格',
+        name: 'table',
         component: () => import("@/views/demo/table"),
       },
       {
@@ -180,8 +198,15 @@ const routes = [
         id: '0407',
         path: 'chart-paging',
         name: 'chart-paging',
-        title: "chart-paging",
+        title: "图表分页",
         component: () => import("@/views/demo/chart-paging"),
+      },
+      {
+        id: '040701',
+        path: 'echarts-flag',
+        name: 'echarts-flag',
+        title: "echarts打点标记",
+        component: () => import("@/views/demo/echarts-flag"),
       },
       {
         id: '0408',
@@ -252,6 +277,13 @@ const routes = [
         name: 'photoCard',
         title: "photoCard",
         component: () => import("@/views/demo/photoCard"),
+      },
+      {
+        id: '0418',
+        path: 'downloadPdf',
+        name: 'downloadPdf',
+        title: "页面导出pdf",
+        component: () => import("@/views/demo/downloadPdf"),
       },
     ]
   },

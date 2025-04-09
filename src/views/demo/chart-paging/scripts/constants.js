@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-24 13:17:18
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-11-21 19:17:20
+ * @LastEditTime: 2025-01-24 10:04:48
  */
 
 const CHART_OPTION = {

@@ -1,3 +1,10 @@
+<!--
+ * @Description: 
+ * @Author: 
+ * @Date: 2022-11-02 15:41:39
+ * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2025-04-09 15:20:41
+-->
 <template>
   <div id="app" style="height: 100%">
     <el-container style="height: 100%">
@@ -38,8 +45,17 @@
         >
           <span>xxxxxxx</span>
         </el-header>
-        <el-main style="padding: 5px !important; overflow-x: hidden">
-          <router-view />
+        <el-main style="padding: 10px !important; overflow-x: hidden">
+          <!-- <keep-alive>
+            <router-view></router-view>
+          </keep-alive> -->
+          <router-view slot-scope="{ Component }">
+            <transition name="scale" mode="out-in">
+              <keep-alive>
+                <component :is="Component" />
+              </keep-alive>
+            </transition>
+          </router-view>
         </el-main>
       </el-container>
     </el-container>

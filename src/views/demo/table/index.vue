@@ -15,9 +15,14 @@
 import TableDemo1 from "./index2.vue"
 import TableDemo2 from "./tableSpan.vue"
 export default {
+  name: "table",
   components: {
     TableDemo1,
     TableDemo2
+  },
+  mounted() {
+    console.log("mounted");
+      
   },
   data() {
     return {

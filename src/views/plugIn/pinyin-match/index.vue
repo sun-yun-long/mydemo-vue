@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2023-02-22 16:11:22
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2023-10-23 17:51:38
+ * @LastEditTime: 2025-04-09 10:45:17
 -->
 <template>
   <div>
@@ -14,16 +14,41 @@
       filterable
       :filter-method="pinyingSub"
       clearable
-      @clear="subArr = copySub"
-      @focus="subArr = copySub"
+      @visible-change="(visible) => visible && pinyingSub('')"
     >
       <el-option
-        v-for="item in subArr"
+        v-for="item in subList"
+        :style="item.hidden && { display: 'none' }"
         :key="item.value"
         :label="item.label"
         :value="item.value"
       ></el-option>
     </el-select>
+    <el-row :gutter="10">
+      <el-col :span="12">
+        <el-table :data="copySub">
+          <el-table-column prop="label" label="label"></el-table-column>
+          <el-table-column prop="value" label="value"></el-table-column>
+          <el-table-column prop="hidden" label="hidden">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.hidden"></el-switch>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+      <el-col :span="12">
+        <el-table :data="subArr">
+          <el-table-column prop="label" label="label"></el-table-column>
+          <el-table-column prop="value" label="value"></el-table-column>
+          <el-table-column prop="hidden" label="hidden">
+            <template slot-scope="scope">
+              <el-switch v-model="scope.row.hidden"></el-switch>
+            </template>
+          </el-table-column>
+        </el-table>
+      </el-col>
+    </el-row>
+    
 
     <div class="block">
       <div class="demonstration" :title="`带快捷选项带快捷选项\nasasa`">带快捷选项</div>
@@ -55,11 +80,11 @@ export default {
         substation: ""
       },
       subArr: [
-        { label: "北京", value: "01" },
-        { label: "上海", value: "02" },
-        { label: "深圳", value: "03" },
-        { label: "杭州", value: "04" },
-        { label: "南京", value: "05" }
+        { label: "北京", value: "01", hidden: false },
+        { label: "上海", value: "02", hidden: false },
+        { label: "深圳", value: "03", hidden: false },
+        { label: "杭州", value: "04", hidden: false },
+        { label: "南京", value: "05", hidden: false }
       ],
       copySub: [],
       value2: "",
@@ -105,13 +130,22 @@ export default {
   mounted() {
     this.init();
   },
+  computed: {
+    subList() {
+      const hiddenArr = this.subArr.filter((item) => item.hidden);
+      if (hiddenArr.length == this.subArr.length) {
+        return [];
+      } else {
+        return this.subArr;
+      }
+    } 
+  },
   methods: {
     init() {
-      this.copySub = this.subArr;
+      this.copySub = JSON.parse(JSON.stringify(this.subArr));
     },
     pinyingSub(val) {
-      let _this = this;
-      this.subArr = pinyingSubs(val, "label", _this.subArr, _this.copySub);
+      this.subArr = pinyingSubs(val, { label: "label", value: "value" }, this.subArr);
     }
   }
 };
