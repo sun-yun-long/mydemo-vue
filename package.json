@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "report": "vue-cli-service build --report",
     "deploy": "gh-pages -d dist -r https://github.com/sun-yun-long/mydemo-vue.git -b gh-pages"
   },
   "dependencies": {
@@ -47,6 +48,7 @@
     "vue-splitpane": "^1.0.2",
     "vue-table-with-tree-grid": "^0.2.4",
     "vue-text-format": "^1.2.6",
+    "vue-virtual-scroller": "^1.1.2",
     "vuex": "^3.4.0",
     "vxe-table": "^3.2.4",
     "vxe-table-plugin-element": "^1.11.2",
