@@ -11,12 +11,21 @@ import router from './router'
 import store from './store'
 import '@/style/index.less' // global css
 
+// Vue Virtual Scroller
+import VueVirtualScroller from 'vue-virtual-scroller'
+import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
+Vue.use(VueVirtualScroller)
+
 // ElementUI
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 
 import DataDriverUI from 'dd-ui-library'
 import 'dd-ui-library/dd-ui-library.css'
+
+// Echarts
+import * as echarts from 'echarts'
+
 
 // import Handsontable from "handsontable";
 // import 'handsontable/dist/handsontable.full.css';

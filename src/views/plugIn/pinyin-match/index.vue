@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2023-02-22 16:11:22
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-09 10:45:17
+ * @LastEditTime: 2025-08-12 13:17:05
 -->
 <template>
   <div>
@@ -14,8 +14,11 @@
       filterable
       :filter-method="pinyingSub"
       clearable
+      multiple
+      collapse-tags
       @visible-change="(visible) => visible && pinyingSub('')"
     >
+      <el-checkbox class="aazasa" v-model="formInline.substation" :indeterminate="formInline.substation.length > 0 && formInline.substation.length < subList.length" @change="handleAllSelect"></el-checkbox>
       <el-option
         v-for="item in subList"
         :style="item.hidden && { display: 'none' }"
@@ -77,14 +80,27 @@ export default {
   data() {
     return {
       formInline: {
-        substation: ""
+        substation: []
       },
       subArr: [
         { label: "北京", value: "01", hidden: false },
         { label: "上海", value: "02", hidden: false },
         { label: "深圳", value: "03", hidden: false },
         { label: "杭州", value: "04", hidden: false },
-        { label: "南京", value: "05", hidden: false }
+        { label: "南京", value: "05", hidden: false },
+        { label: "广州", value: "06", hidden: false },
+        { label: "成都", value: "07", hidden: false },
+        { label: "重庆", value: "08", hidden: false },
+        { label: "武汉", value: "09", hidden: false },
+        { label: "西安", value: "10", hidden: false },
+        { label: "长沙", value: "11", hidden: false },
+        { label: "郑州", value: "12", hidden: false },
+        { label: "青岛", value: "13", hidden: false },
+        { label: "济南", value: "14", hidden: false },
+        { label: "石家庄", value: "15", hidden: false },
+        { label: "哈尔滨", value: "16", hidden: false },
+        { label: "长春", value: "17", hidden: false },
+        { label: "沈阳", value: "18", hidden: false },
       ],
       copySub: [],
       value2: "",
@@ -146,6 +162,9 @@ export default {
     },
     pinyingSub(val) {
       this.subArr = pinyingSubs(val, { label: "label", value: "value" }, this.subArr);
+    },
+    handleAllSelect() {
+      this.formInline.substation = this.subArr.map(item => item.value);
     }
   }
 };

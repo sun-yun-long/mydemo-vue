@@ -8,7 +8,9 @@
 <!--页面路由入口-->
 <template>
   <div style="height: 100%; width: 100%;">
-    <router-view/>
+    <keep-alive>
+      <router-view/>
+    </keep-alive>
   </div>
 </template>
 

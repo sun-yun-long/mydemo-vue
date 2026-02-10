@@ -3,7 +3,7 @@
  * @Author: 
  * @Date: 2022-11-07 10:52:01
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2025-04-09 15:23:00
+ * @LastEditTime: 2025-08-14 14:44:43
  */
 import Vue from 'vue'
 import VueRouter from 'vue-router'
@@ -110,6 +110,12 @@ const routes = [
         path: 'tinymce',
         name: 'tinymce',
         component: () => import('@/views/plugIn/Tinymce')
+      },
+      {
+        id: '0214',
+        path: 'vue-virtual-scroller',
+        name: 'vue-virtual-scroller',
+        component: () => import('@/views/plugIn/vueVirtualScroller')
       },
     ]
   },
@@ -258,6 +264,20 @@ const routes = [
         component: () => import("@/views/demo/el-tree/drag.vue"),
       },
       {
+        id: '041401',
+        path: 'el-tree-custom',
+        name: 'el-tree-custom',
+        title: "tree自定义",
+        component: () => import("@/views/demo/el-tree/custom.vue"),
+      },
+      {
+        id: '041402',
+        path: 'el-tree-customFundTree',
+        name: 'el-tree-customFundTree',
+        title: "tree自定义组合",
+        component: () => import("@/views/demo/el-tree/customFundTree.vue"),
+      },
+      {
         id: '0415',
         path: 'chechboxTable',
         name: 'chechboxTable',
@@ -284,6 +304,41 @@ const routes = [
         name: 'downloadPdf',
         title: "页面导出pdf",
         component: () => import("@/views/demo/downloadPdf"),
+      },
+      {
+        id: '0419',
+        path: 'pako',
+        name: 'pako',
+        title: "pako压缩",
+        component: () => import("@/views/demo/pako"),
+      },
+      {
+        id: '0420',
+        path: 'text-file',
+        name: 'text-file',
+        title: "文本转文件",
+        component: () => import("@/views/demo/text-file"),
+      },
+      {
+        id: '0421',
+        path: 'MultiSelectTest',
+        name: 'MultiSelectTest',
+        title: "自定义多选下拉框使用",
+        component: () => import("@/views/demo/MultiSelectTest"),
+      },
+      {
+        id: '0422',
+        path: 'code',
+        name: 'code',
+        title: "代码展示",
+        component: () => import("@/views/demo/code"),
+      },
+      {
+        id: '0423',
+        path: 'websocket',
+        name: 'websocket',
+        title: "WebSocket实时数据",
+        component: () => import("@/views/demo/websocket"),
       },
     ]
   },
