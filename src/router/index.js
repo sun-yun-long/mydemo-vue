@@ -155,6 +155,13 @@ const routes = [
         name: 'fanpai',
         component: () => import("@/views/game/fanpai"),
       },
+      {
+        id: '0306',
+        path: 'gobang',
+        name: 'gobang',
+        title: '五子棋',
+        component: () => import("@/views/game/gobang"),
+      },
     ]
   },
   {

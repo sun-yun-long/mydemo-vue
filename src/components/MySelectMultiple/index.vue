@@ -15,6 +15,7 @@
       <!-- 下拉选择框 -->
       <el-select
         v-model="selectedValues"
+        :title="selectedNameStr"
         multiple
         collapse-tags
         :placeholder="'    ' + placeholder"
@@ -122,6 +123,13 @@ export default {
         this.selectedValues.includes(value)
       ).length;
       return selectedCount > 0 && selectedCount < this.selectableValues.length;
+    },
+    // 选中的名称字符串
+    selectedNameStr() {
+      return this.selectedValues.map((value) => {
+        const option = this.options.find((option) => option[this.optionsProps.value] === value);
+        return option ? option[this.optionsProps.label] : "";
+      }).join(", ");
     }
   },
   watch: {

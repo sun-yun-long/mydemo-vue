@@ -62,8 +62,10 @@ Vue.use(Print); //注册
 Vue.component('tree-table', TreeTable)
 
 import VueFlowy from 'vue-flowy';
- 
 Vue.use(VueFlowy);
+
+import Vue2WaterMarker from 'vue2-water-marker'
+Vue.use(Vue2WaterMarker)
 
 Vue.use(DataDriverUI);
 Vue.use(ElementUI);

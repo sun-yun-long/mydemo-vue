@@ -18,10 +18,10 @@
       collapse-tags
       @visible-change="(visible) => visible && pinyingSub('')"
     >
-      <el-checkbox class="aazasa" v-model="formInline.substation" :indeterminate="formInline.substation.length > 0 && formInline.substation.length < subList.length" @change="handleAllSelect"></el-checkbox>
+      <el-checkbox class="aazasa" :value="formInline.substation.length === subArr.length && subArr.length > 0" :indeterminate="formInline.substation.length > 0 && formInline.substation.length < subArr.length" @change="handleAllSelect"></el-checkbox>
       <el-option
         v-for="item in subList"
-        :style="item.hidden && { display: 'none' }"
+        v-show="!item.hidden"
         :key="item.value"
         :label="item.label"
         :value="item.value"
@@ -148,12 +148,8 @@ export default {
   },
   computed: {
     subList() {
-      const hiddenArr = this.subArr.filter((item) => item.hidden);
-      if (hiddenArr.length == this.subArr.length) {
-        return [];
-      } else {
-        return this.subArr;
-      }
+      const allHidden = this.subArr.every(item => item.hidden);
+      return allHidden ? [] : this.subArr;
     } 
   },
   methods: {
@@ -161,10 +157,10 @@ export default {
       this.copySub = JSON.parse(JSON.stringify(this.subArr));
     },
     pinyingSub(val) {
-      this.subArr = pinyingSubs(val, { label: "label", value: "value" }, this.subArr);
+      this.subArr = pinyingSubs(val, { label: "label" }, this.subArr);
     },
-    handleAllSelect() {
-      this.formInline.substation = this.subArr.map(item => item.value);
+    handleAllSelect(val) {
+      this.formInline.substation = val ? this.subArr.map(item => item.value) : [];
     }
   }
 };

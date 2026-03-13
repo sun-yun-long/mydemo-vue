@@ -1,323 +1,308 @@
-// 定义requestAnimFrame函数
-window.requestAnimFrame = function () {
-  // 检查浏览器是否支持requestAnimFrame函数
-  return (
-      window.requestAnimationFrame ||
-      window.webkitRequestAnimationFrame ||
-      window.mozRequestAnimationFrame ||
-      window.oRequestAnimationFrame ||
-      window.msRequestAnimationFrame ||
-      // 如果所有这些选项都不可用，使用设置超时来调用回调函数
-      function (callback) {
-          window.setTimeout(callback)
-      }
-  )
+/**
+ * 蜘蛛触手动画引擎
+ * 基于 Canvas 2D 的粒子触手效果
+ */
+
+// 计算两点之间的距离
+function dist(p1x, p1y, p2x, p2y) {
+  const dx = p2x - p1x;
+  const dy = p2y - p1y;
+  return Math.sqrt(dx * dx + dy * dy);
 }
 
-// 初始化函数，用于获取canvas元素并返回相关信息
-function init(elemid) {
-  // 获取canvas元素
-  let canvas = document.getElementById(elemid)
-  // 获取2d绘图上下文,这里d是小写的
-  c = canvas.getContext('2d')
-  // 设置canvas的宽度为窗口内宽度，高度为窗口内高度
-  w = (canvas.width = window.innerWidth)
-  h = (canvas.height = window.innerHeight)
-  // 设置填充样式为半透明黑
-  c.fillStyle = "rgba(30,30,30,1)"
-  // 使用填充样式填充整个canvas
-  c.fillRect(0, 0, w, h)
-  // 返回绘图上下文和canvas元素
-  return { c: c, canvas: canvas }
+// 触手段（segment）类
+class Segment {
+  constructor(parent, l, a, isFirst) {
+    this.l = l;
+    this.ang = a;
+    if (isFirst) {
+      this.pos = { x: parent.x, y: parent.y };
+    } else {
+      this.pos = { x: parent.nextPos.x, y: parent.nextPos.y };
+    }
+    this.nextPos = {
+      x: this.pos.x + this.l * Math.cos(this.ang),
+      y: this.pos.y + this.l * Math.sin(this.ang),
+    };
+  }
+
+  update(target) {
+    this.ang = Math.atan2(target.y - this.pos.y, target.x - this.pos.x);
+    this.pos.x = target.x + this.l * Math.cos(this.ang - Math.PI);
+    this.pos.y = target.y + this.l * Math.sin(this.ang - Math.PI);
+    this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang);
+    this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang);
+  }
+
+  fallback(target) {
+    this.pos.x = target.x;
+    this.pos.y = target.y;
+    this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang);
+    this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang);
+  }
+
+  show(ctx) {
+    ctx.lineTo(this.nextPos.x, this.nextPos.y);
+  }
 }
 
-// 等待页面加载完成后执行函数
-window.onload = function () {
-  // 获取绘图上下文和canvas元素
-  let c = init("canvas").c,
-      canvas = init("canvas").canvas,
-      // 设置canvas的宽度为窗口内宽度，高度为窗口内高度
-      w = (canvas.width = window.innerWidth),
-      h = (canvas.height = window.innerHeight),
-      // 初始化鼠标对象
-      mouse = { x: false, y: false },
-      last_mouse = {}
+// 触手（tentacle）类
+class Tentacle {
+  constructor(x, y, l, n) {
+    this.x = x;
+    this.y = y;
+    this.l = l;
+    this.n = n;
+    this.rand = Math.random();
+    this.t = {};
 
-  // 定义计算两点距离的函数
-  function dist(p1x, p1y, p2x, p2y) {
-      return Math.sqrt(Math.pow(p2x - p1x, 2) + Math.pow(p2y - p1y, 2))
+    // 预计算颜色值，避免每帧重复拼接字符串
+    this.color = `hsl(${this.rand * 60 + 180}, 100%, ${this.rand * 60 + 25}%)`;
+    this.lineWidth = this.rand * 2;
+    this.dotRadiusActive = 2 * this.rand + 1;
+    this.dotRadiusInactive = this.rand * 2;
+
+    // 构建 segment 链
+    const segLen = this.l / this.n;
+    this.segments = [new Segment(this, segLen, 0, true)];
+    for (let i = 1; i < this.n; i++) {
+      this.segments.push(new Segment(this.segments[i - 1], segLen, 0, false));
+    }
   }
 
-  // 定义 segment 类
-  class segment {
-      // 构造函数，用于初始化 segment 对象
-      constructor(parent, l, a, first) {
-          // 如果是第一条触手段，则位置坐标为触手顶部位置
-          // 否则位置坐标为上一个segment对象的nextPos坐标
-          this.first = first
-          if (first) {
-              this.pos = {
-                  x: parent.x,
-                  y: parent.y,
-              }
-          } else {
-              this.pos = {
-                  x: parent.nextPos.x,
-                  y: parent.nextPos.y,
-              }
-          }
-          // 设置segment的长度和角度
-          this.l = l
-          this.ang = a
-          // 计算下一个segment的坐标位置
-          this.nextPos = {
-              x: this.pos.x + this.l * Math.cos(this.ang),
-              y: this.pos.y + this.l * Math.sin(this.ang),
-          }
+  move(lastTarget, target) {
+    const angle = Math.atan2(target.y - this.y, target.x - this.x);
+    const dt = dist(lastTarget.x, lastTarget.y, target.x, target.y);
+    this.t.x = target.x - 0.8 * dt * Math.cos(angle);
+    this.t.y = target.y - 0.8 * dt * Math.sin(angle);
+
+    // 更新最后一段
+    const moveTarget = this.t.x ? this.t : target;
+    this.segments[this.n - 1].update(moveTarget);
+
+    // 逆序更新其余段
+    for (let i = this.n - 2; i >= 0; i--) {
+      this.segments[i].update(this.segments[i + 1].pos);
+    }
+
+    // 回弹检查
+    const distToTarget = dist(this.x, this.y, target.x, target.y);
+    if (distToTarget <= this.l + dt) {
+      this.segments[0].fallback({ x: this.x, y: this.y });
+      for (let i = 1; i < this.n; i++) {
+        this.segments[i].fallback(this.segments[i - 1].nextPos);
       }
-      // 更新segment位置的方法
-      update(t) {
-          // 计算segment与目标点的角度
-          this.ang = Math.atan2(t.y - this.pos.y, t.x - this.pos.x)
-          // 根据目标点和角度更新位置坐标
-          this.pos.x = t.x + this.l * Math.cos(this.ang - Math.PI)
-          this.pos.y = t.y + this.l * Math.sin(this.ang - Math.PI)
-          // 根据新的位置坐标更新nextPos坐标
-          this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang)
-          this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang)
-      }
-      // 将 segment 回执回初始位置的方法
-      fallback(t) {
-          // 将位置坐标设置为目标点坐标
-          this.pos.x = t.x
-          this.pos.y = t.y
-          this.nextPos.x = this.pos.x + this.l * Math.cos(this.ang)
-          this.nextPos.y = this.pos.y + this.l * Math.sin(this.ang)
-      }
-      show() {
-          c.lineTo(this.nextPos.x, this.nextPos.y)
-      }
+    }
   }
 
-  // 定义 tentacle 类
-  class tentacle {
-      // 构造函数，用于初始化 tentacle 对象
-      constructor(x, y, l, n, a) {
-          // 设置触手的顶部位置坐标
-          this.x = x
-          this.y = y
-          // 设置触手的长度
-          this.l = l
-          // 设置触手的段数
-          this.n = n
-          // 初始化触手的目标点对象
-          this.t = {}
-          // 设置触手的随机移动参数
-          this.rand = Math.random()
-          // 创建触手的第一条段
-          this.segments = [new segment(this, this.l / this.n, 0, true)]
-          // 创建其他的段
-          for (let i = 1; i < this.n; i++) {
-              this.segments.push(
-                  new segment(this.segments[i - 1], this.l / this.n, 0, false)
-              )
-          }
-      }
-      // 移动触手到目标点的方法
-      move(last_target, target) {
-          // 计算触手顶部与目标点的角度
-          this.angle = Math.atan2(target.y - this.y, target.x - this.x)
-          // 计算触手的距离参数
-          this.dt = dist(last_target.x, last_target.y, target.x, target.y)
-          // 计算触手的目标点坐标
-          this.t = {
-              x: target.x - 0.8 * this.dt * Math.cos(this.angle),
-              y: target.y - 0.8 * this.dt * Math.sin(this.angle)
-          }
-          // 如果计算出了目标点，则更新最后一个segment对象的位置坐标
-          // 否则，更新最后一个segment对象的位置坐标为目标点坐标
-          if (this.t.x) {
-              this.segments[this.n - 1].update(this.t)
-          } else {
-              this.segments[this.n - 1].update(target)
-          }
-          // 遍历所有segment对象，更新它们的位置坐标
-          for (let i = this.n - 2; i >= 0; i--) {
-              this.segments[i].update(this.segments[i + 1].pos)
-          }
-          if (
-              dist(this.x, this.y, target.x, target.y) <=
-              this.l + dist(last_target.x, last_target.y, target.x, target.y)
-          ) {
-              this.segments[0].fallback({ x: this.x, y: this.y })
-              for (let i = 1; i < this.n; i++) {
-                  this.segments[i].fallback(this.segments[i - 1].nextPos)
-              }
-          }
-      }
-      show(target) {
-          // 如果触手与目标点的距离小于触手的长度，则回执触手
-          if (dist(this.x, this.y, target.x, target.y) <= this.l) {
-              // 设置全局合成操作为lighter
-              c.globalCompositeOperation = "lighter"
-              // 开始新路径
-              c.beginPath()
-              // 从触手起始位置开始绘制线条
-              c.moveTo(this.x, this.y)
-              // 遍历所有的segment对象，并使用他们的show方法回执线条
-              for (let i = 0; i < this.n; i++) {
-                  this.segments[i].show()
-              }
-              // 设置线条样式
-              c.strokeStyle = "hsl(" + (this.rand * 60 + 180) +
-                  ",100%," + (this.rand * 60 + 25) + "%)"
-              // 设置线条宽度
-              c.lineWidth = this.rand * 2
-              // 设置线条端点样式
-              c.lineCap = "round"
-              // 设置线条连接处样式
-              c.lineJoin = "round"
-              // 绘制线条
-              c.stroke()
-              // 设置全局合成操作为“source-over”
-              c.globalCompositeOperation = "source-over"
-          }
-      }
-      // 绘制触手的圆形头的方法
-      show2(target) {
-          // 开始新路径
-          c.beginPath()
-          // 如果触手与目标点的距离小于触手的长度，则回执白色的圆形
-          // 否则绘制青色的圆形
-          if (dist(this.x, this.y, target.x, target.y) <= this.l) {
-              c.arc(this.x, this.y, 2 * this.rand + 1, 0, 2 * Math.PI)
-              c.fillStyle = "whith"
-          } else {
-              c.arc(this.x, this.y, this.rand * 2, 0, 2 * Math.PI)
-              c.fillStyle = "darkcyan"
-          }
-          // 填充圆形
-          c.fill()
-      }
+  // 绘制触手线条
+  showLine(ctx, target) {
+    if (dist(this.x, this.y, target.x, target.y) > this.l) return;
+
+    ctx.globalCompositeOperation = "lighter";
+    ctx.beginPath();
+    ctx.moveTo(this.x, this.y);
+    for (let i = 0; i < this.n; i++) {
+      this.segments[i].show(ctx);
+    }
+    ctx.strokeStyle = this.color;
+    ctx.lineWidth = this.lineWidth;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.stroke();
+    ctx.globalCompositeOperation = "source-over";
   }
-  // 初始化变量
-  let maxl = 400,//触手的最大长度
-      minl = 50,//触手的最小长度
-      n = 30,//触手的段数
-      numt = 600,//触手的数量
-      tent = [],//触手的数组
-      clicked = false,//鼠标是否被按下
-      target = { x: 0, y: 0 }, //触手的目标点
-      last_target = {},//上一个触手的目标点
-      t = 0,//当前时间
-      q = 10;//触手每次移动的步长
 
-  // 创建触手对象
-  for (let i = 0; i < numt; i++) {
-      tent.push(
-          new tentacle(
-              Math.random() * w,//触手的横坐标
-              Math.random() * h,//触手的纵坐标
-              Math.random() * (maxl - minl) + minl,//触手的长度
-              n,//触手的段数
-              Math.random() * 2 * Math.PI,//触手的角度
-          )
-      )
+  // 绘制触手圆点
+  showDot(ctx, target) {
+    ctx.beginPath();
+    if (dist(this.x, this.y, target.x, target.y) <= this.l) {
+      ctx.arc(this.x, this.y, this.dotRadiusActive, 0, 2 * Math.PI);
+      ctx.fillStyle = "white";
+    } else {
+      ctx.arc(this.x, this.y, this.dotRadiusInactive, 0, 2 * Math.PI);
+      ctx.fillStyle = "darkcyan";
+    }
+    ctx.fill();
   }
-  // 绘制图像的方法
-  function draw() {
-      // 如果鼠标移动，则计算触手的目标点与当前点的偏差
-      if (mouse.x) {
-          target.errx = mouse.x - target.x
-          target.erry = mouse.y - target.y
-      } else {
-          // 否则，计算触手的目标点的横坐标
-          target.errx =
-              w / 2 +
-              ((h / 2 - q) * Math.sqrt(2) * Math.cos(t)) /
-              (Math.pow(Math.sin(t), 2) + 1) -
-              target.x;
-          target.erry =
-              h / 2 +
-              ((h / 2 - q) * Math.sqrt(2) * Math.cos(t) * Math.sin(t)) /
-              (Math.pow(Math.sin(t), 2) + 1) -
-              target.y;
-      }
+}
 
-      // 更新触手的目标点坐标
-      target.x += target.errx / 10
-      target.y += target.erry / 10
+/**
+ * 蜘蛛触手动画类
+ * 封装整个动画逻辑，方便在 Vue 组件中管理生命周期
+ */
+export default class SpiderAnimation {
+  constructor(canvas, options = {}) {
+    this.canvas = canvas;
+    this.ctx = canvas.getContext("2d");
 
-      // 更新时间
-      t += 0.01;
+    // 配置参数（可自定义）
+    this.maxLength = options.maxLength || 400;
+    this.minLength = options.minLength || 50;
+    this.segmentCount = options.segmentCount || 30;
+    this.tentacleCount = options.tentacleCount || 600;
+    this.easing = options.easing || 10;  // 目标点跟随的缓动系数
 
-      // 绘制触手的目标点
-      c.beginPath();
-      c.arc(
-          target.x,
-          target.y,
-          dist(last_target.x, last_target.y, target.x, target.y) + 5,
-          0,
-          2 * Math.PI
+    // 状态变量
+    this.mouse = { x: false, y: false };
+    this.lastMouse = {};
+    this.target = { x: 0, y: 0, errx: 0, erry: 0 };
+    this.lastTarget = { x: 0, y: 0 };
+    this.t = 0;
+    this.q = 10;
+    this.animationId = null;
+    this.tentacles = [];
+
+    // 绑定方法（方便添加/移除事件监听）
+    this._onResize = this._handleResize.bind(this);
+    this._onMouseMove = this._handleMouseMove.bind(this);
+    this._onMouseLeave = this._handleMouseLeave.bind(this);
+    this._onTouchMove = this._handleTouchMove.bind(this);
+    this._onTouchEnd = this._handleTouchEnd.bind(this);
+
+    this._init();
+  }
+
+  _init() {
+    this._resize();
+    this._createTentacles();
+    this._bindEvents();
+    this._loop();
+  }
+
+  _resize() {
+    this.w = this.canvas.width = window.innerWidth;
+    this.h = this.canvas.height = window.innerHeight;
+  }
+
+  _createTentacles() {
+    this.tentacles = [];
+    for (let i = 0; i < this.tentacleCount; i++) {
+      this.tentacles.push(
+        new Tentacle(
+          Math.random() * this.w,
+          Math.random() * this.h,
+          Math.random() * (this.maxLength - this.minLength) + this.minLength,
+          this.segmentCount
+        )
       );
-      c.fillStyle = "hsl(210,100%,80%)"
-      c.fill();
-
-      // 绘制所有触手的中心点
-      for (i = 0; i < numt; i++) {
-          tent[i].move(last_target, target)
-          tent[i].show2(target)
-      }
-      // 绘制所有触手
-      for (i = 0; i < numt; i++) {
-          tent[i].show(target)
-      }
-      // 更新上一个触手的目标点坐标
-      last_target.x = target.x
-      last_target.y = target.y
-  }
-  // 循环执行绘制动画的函数
-  function loop() {
-      // 使用requestAnimFrame函数循环执行
-      window.requestAnimFrame(loop)
-
-      // 清空canvas
-      c.clearRect(0, 0, w, h)
-
-      // 绘制动画
-      draw()
+    }
   }
 
-  // 监听窗口大小改变事件
-  window.addEventListener("resize", function () {
-      // 重置canvas的大小
-      w = canvas.width = window.innerWidth
-      w = canvas.height = window.innerHeight
+  _bindEvents() {
+    window.addEventListener("resize", this._onResize);
+    this.canvas.addEventListener("mousemove", this._onMouseMove, false);
+    this.canvas.addEventListener("mouseleave", this._onMouseLeave);
+    // 移动端触摸支持
+    this.canvas.addEventListener("touchmove", this._onTouchMove, { passive: false });
+    this.canvas.addEventListener("touchend", this._onTouchEnd);
+  }
 
-      // 循环执行回执动画的函数
-      loop()
-  })
+  _unbindEvents() {
+    window.removeEventListener("resize", this._onResize);
+    this.canvas.removeEventListener("mousemove", this._onMouseMove);
+    this.canvas.removeEventListener("mouseleave", this._onMouseLeave);
+    this.canvas.removeEventListener("touchmove", this._onTouchMove);
+    this.canvas.removeEventListener("touchend", this._onTouchEnd);
+  }
 
-  // 循环执行回执动画的函数
-  loop()
-  // 使用setInterval函数循环
-  setInterval(loop, 1000 / 60)
+  _handleResize() {
+    this._resize();
+    // 不再重复调用 loop，因为动画循环已经在运行
+  }
 
-  // 监听鼠标移动事件
-  canvas.addEventListener("mousemove", function (e) {
-      // 记录上一次的鼠标位置
-      last_mouse.x = mouse.x
-      last_mouse.y = mouse.y
+  _handleMouseMove(e) {
+    this.lastMouse.x = this.mouse.x;
+    this.lastMouse.y = this.mouse.y;
+    this.mouse.x = e.pageX - this.canvas.offsetLeft;
+    this.mouse.y = e.pageY - this.canvas.offsetTop;
+  }
 
-      // 更新点前的鼠标位置
-      mouse.x = e.pageX - this.offsetLeft
-      mouse.y = e.pageY - this.offsetTop
-  }, false)
+  _handleMouseLeave() {
+    this.mouse.x = false;
+    this.mouse.y = false;
+  }
 
-  // 监听鼠标离开事件
-  canvas.addEventListener("mouseleave", function (e) {
-      // 将mouse设为false
-      mouse.x = false
-      mouse.y = false
-  })
+  _handleTouchMove(e) {
+    e.preventDefault();
+    const touch = e.touches[0];
+    this.lastMouse.x = this.mouse.x;
+    this.lastMouse.y = this.mouse.y;
+    this.mouse.x = touch.pageX - this.canvas.offsetLeft;
+    this.mouse.y = touch.pageY - this.canvas.offsetTop;
+  }
+
+  _handleTouchEnd() {
+    this.mouse.x = false;
+    this.mouse.y = false;
+  }
+
+  _draw() {
+    const { ctx, w, h, mouse, target, lastTarget, tentacles, q } = this;
+
+    // 计算目标点偏差
+    if (mouse.x) {
+      target.errx = mouse.x - target.x;
+      target.erry = mouse.y - target.y;
+    } else {
+      // 无鼠标输入时，沿 ∞ 形（伯努利双纽线）轨迹运动
+      const sinT = Math.sin(this.t);
+      const cosT = Math.cos(this.t);
+      const denom = sinT * sinT + 1;
+      const factor = (h / 2 - q) * Math.SQRT2;
+      target.errx = w / 2 + (factor * cosT) / denom - target.x;
+      target.erry = h / 2 + (factor * cosT * sinT) / denom - target.y;
+    }
+
+    // 缓动跟随
+    target.x += target.errx / this.easing;
+    target.y += target.erry / this.easing;
+    this.t += 0.01;
+
+    // 绘制目标点光球
+    ctx.beginPath();
+    ctx.arc(
+      target.x,
+      target.y,
+      dist(lastTarget.x, lastTarget.y, target.x, target.y) + 5,
+      0,
+      2 * Math.PI
+    );
+    ctx.fillStyle = "hsl(210, 100%, 80%)";
+    ctx.fill();
+
+    // 绘制触手圆点
+    for (let i = 0; i < tentacles.length; i++) {
+      tentacles[i].move(lastTarget, target);
+      tentacles[i].showDot(ctx, target);
+    }
+
+    // 绘制触手线条
+    for (let i = 0; i < tentacles.length; i++) {
+      tentacles[i].showLine(ctx, target);
+    }
+
+    // 更新上一帧目标点
+    lastTarget.x = target.x;
+    lastTarget.y = target.y;
+  }
+
+  _loop() {
+    this.animationId = requestAnimationFrame(() => this._loop());
+    this.ctx.clearRect(0, 0, this.w, this.h);
+    this._draw();
+  }
+
+  /**
+   * 销毁动画，清理所有资源
+   * 在 Vue 组件的 beforeDestroy/unmounted 中调用
+   */
+  destroy() {
+    if (this.animationId) {
+      cancelAnimationFrame(this.animationId);
+      this.animationId = null;
+    }
+    this._unbindEvents();
+    this.tentacles = [];
+  }
 }

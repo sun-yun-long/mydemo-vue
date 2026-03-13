@@ -24,9 +24,10 @@
         @node-click="hideContextMenu"
       >
         <!-- 自定义节点内容 -->
-        <span slot-scope="{ node, data }" :class="{ 'is-folder-node': data.type === 'all' || data.type === 'fundType' }">
+        <!-- <span slot-scope="{ node, data }" :class="{ 'is-folder-node': data.type === 'all' || data.type === 'fundType' }"> -->
+        <span slot-scope="{ node, data }">
           <span class="custom-tree-node">
-            <i v-if="data.type === 'all' || data.type === 'fundType'" :class="getNodeIcon(data.type)"></i>
+            <!-- <i v-if="data.type === 'all' || data.type === 'fundType'" :class="getNodeIcon(data.type)"></i> -->
             <span class="node-label">{{ node.label }}</span>
           </span>
         </span>
@@ -42,7 +43,7 @@
       <div class="menu-header">{{ contextMenu.nodeLabel }}</div>
       <div class="menu-item" @click="handleMenuSelect">
         <i class="el-icon-check"></i>
-        全选子级
+        选择子级
       </div>
       <div class="menu-item menu-item-warning" @click="handleMenuDeselect">
         <i class="el-icon-close"></i>
@@ -51,7 +52,7 @@
       <div class="menu-divider"></div>
       <div class="menu-item" @click="handleMenuSelectAll">
         <i class="el-icon-folder-checked"></i>
-        全选所有后代
+        选择所有后代
       </div>
       <div class="menu-item menu-item-warning" @click="handleMenuDeselectAll">
         <i class="el-icon-folder-delete"></i>
@@ -101,7 +102,7 @@ export default {
       defaultProps: {
         children: "children",
         label: "label",
-        disabled: (data) => data.type === "all" || data.type === "fundType",
+        // disabled: (data) => data.type === "all" || data.type === "fundType",
       },
       treeData: [
         {
@@ -244,13 +245,14 @@ export default {
      */
     handleMenuSelect() {
       const nodeData = this.contextMenu.nodeData;
-      if (nodeData.type === 'all' || nodeData.type === 'fundType') {
-        // folder 类型：选中所有后代中的 fund 节点
-        this.selectFundDescendants(nodeData);
-      } else {
-        // 其他类型：选中所有直接子级
-        this.selectAllChildren(nodeData);
-      }
+      // if (nodeData.type === 'all' || nodeData.type === 'fundType') {
+      //   // folder 类型：选中所有后代中的 fund 节点
+      //   this.selectFundDescendants(nodeData);
+      // } else {
+      //   // 其他类型：选中所有直接子级
+      //   this.selectAllChildren(nodeData);
+      // }
+      this.selectAllChildren(nodeData);
       this.hideContextMenu();
     },
 

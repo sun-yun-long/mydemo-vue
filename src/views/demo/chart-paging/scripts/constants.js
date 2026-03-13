@@ -5,8 +5,19 @@
  * @LastEditors: Please set LastEditors
  * @LastEditTime: 2025-01-24 10:04:48
  */
+import fun from "@/filters/common";
 
 const CHART_OPTION = {
+  tooltip: {},
+  toolbox: {
+    feature: {
+      dataView: {
+        optionToContent: fun.optionToContent,
+        readOnly: true
+      },
+      saveAsImage: {}
+    }
+  },
   xAxis: {
     type: 'category',
     data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
@@ -30,6 +41,7 @@ const dataX = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 const dataY = [120, 200, 150, 80, 70, 110, 130];
 
 const CHART_OPTION2 = {
+  tooltip: {},
   xAxis: {
     type: 'category',
     data: []
@@ -92,28 +104,28 @@ const CHART_OPTION3 = {
 
   },
   visualMap:
-    {
-      min: 0,
-      max: 102,
-      calculable: true,
-      type: "piecewise",
-      orient: 'continuous',
-      left: 'center',
-      bottom: '0%',
-      pieces: [
-        { gt: 101, color: '#313695', symbol: 'rect' },
-        { gte: 0, lt: 10, color: '#FF7600', symbol: 'rect' },
-        { gte: 10, lt: 20, color: '#FF9100', symbol: 'rect' },
-        { gte: 20, lt: 30, color: '#FFA600', symbol: 'rect' },
-        { gte: 30, lt: 40, color: '#FFC100', symbol: 'rect' },
-        { gte: 40, lt: 50, color: '#FFD600', symbol: 'rect' },
-        { gte: 50, lt: 60, color: '#FFF100', symbol: 'rect' },
-        { gte: 60, lt: 70, color: '#90EE90', symbol: 'rect' },
-        { gte: 70, lt: 80, color: '#ADFF2F', symbol: 'rect' },
-        { gte: 80, lt: 101, color: '#7CFC00', symbol: 'rect' },
-      ],
-      show: false
-    },
+  {
+    min: 0,
+    max: 102,
+    calculable: true,
+    type: "piecewise",
+    orient: 'continuous',
+    left: 'center',
+    bottom: '0%',
+    pieces: [
+      { gt: 101, color: '#313695', symbol: 'rect' },
+      { gte: 0, lt: 10, color: '#FF7600', symbol: 'rect' },
+      { gte: 10, lt: 20, color: '#FF9100', symbol: 'rect' },
+      { gte: 20, lt: 30, color: '#FFA600', symbol: 'rect' },
+      { gte: 30, lt: 40, color: '#FFC100', symbol: 'rect' },
+      { gte: 40, lt: 50, color: '#FFD600', symbol: 'rect' },
+      { gte: 50, lt: 60, color: '#FFF100', symbol: 'rect' },
+      { gte: 60, lt: 70, color: '#90EE90', symbol: 'rect' },
+      { gte: 70, lt: 80, color: '#ADFF2F', symbol: 'rect' },
+      { gte: 80, lt: 101, color: '#7CFC00', symbol: 'rect' },
+    ],
+    show: false
+  },
   series: [
     {
       name: 'Punch Card',

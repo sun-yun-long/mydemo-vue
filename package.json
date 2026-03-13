@@ -49,6 +49,7 @@
     "vue-table-with-tree-grid": "^0.2.4",
     "vue-text-format": "^1.2.6",
     "vue-virtual-scroller": "^1.1.2",
+    "vue2-water-marker": "0.0.2",
     "vuex": "^3.4.0",
     "vxe-table": "^3.2.4",
     "vxe-table-plugin-element": "^1.11.2",

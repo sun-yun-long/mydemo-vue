@@ -6,38 +6,22 @@
  * @LastEditTime: 2025-04-09 11:02:07
  */
 import PinyinMatch from "pinyin-match";
-import _ from "lodash";
-export function pinyingSubs(val, { label, value }, data) {
-  data = _.cloneDeep(data);
-  let showData = [];
-  if (val) {
-    showData = data.filter((item) => {
-      if (item[label]) {
-        if (item[label].toUpperCase().indexOf(val.toUpperCase()) != -1) {
-          return true;
-        }
-        return PinyinMatch.match(item[label], val);
-      }
-    });
-    const showCodeArr = showData.map((item) => item[value]);
-    if (showCodeArr.length) {
-      for (let i = 0; i < data.length; i++) {
-        if (!showCodeArr.includes(data[i][value])) {
-          data[i].hidden = true;
-        } else {
-          data[i].hidden = false;
-        }
-      }
-    } else {
-      for (let i = 0; i < data.length; i++) {
-        data[i].hidden = true;
-      }
-    }
-  } else {
-    for (let i = 0; i < data.length; i++) {
-      data[i].hidden = false;
-    }
+
+export function pinyingSubs(val, { label = "label" } = {}, data = []) {
+  if (!val) {
+    data.forEach(item => item.hidden = false);
+    return data;
   }
+  
+  const searchVal = val.toUpperCase();
+  data.forEach(item => {
+    let isMatch = false;
+    if (item[label]) {
+      const target = String(item[label]);
+      isMatch = target.toUpperCase().includes(searchVal) || !!PinyinMatch.match(target, val);
+    }
+    item.hidden = !isMatch;
+  });
+  
   return data;
 }
-

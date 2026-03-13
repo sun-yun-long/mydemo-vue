@@ -7,6 +7,15 @@
 -->
 <template>
   <div id="app" style="height: 100%">
+    <vue2-water-marker
+      :text="watermarkText"
+      :opacity="0.2"
+      :openPrevent="true"
+      :beDeleteTips="'禁止删除水印！'"
+      :beChangeTips="'禁止篡改水印！'"
+      :zIndex="9999"
+      :rotateDeg="45"
+    />
     <el-container style="height: 100%">
       <el-aside :width="asideWidth" ref="aside" style="background-color: #304156; position: relative;">
         <!-- 拖拽手柄 -->
@@ -121,6 +130,9 @@ export default {
         menuList.push(obj);
       });
       return menuList;
+    },
+    watermarkText() {
+      return `张三 ${new Date().toLocaleString()}`;
     }
   },
   methods: {
