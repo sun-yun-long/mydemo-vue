@@ -8,10 +8,11 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
+import Layout from '@/views/layout/index.vue'
 
 Vue.use(VueRouter)
 
-const routes = [
+const originalRoutes = [
   {
     id: '01',
     path: '/',
@@ -349,13 +350,39 @@ const routes = [
       },
     ]
   },
-  
 ]
 
-export const constantRouterMap = routes;
+export const constantRouterMap = originalRoutes;
+
+const routes = [
+  {
+    id: 'login',
+    path: '/login',
+    name: 'Login',
+    title: '登录',
+    noShow: true,
+    component: () => import('@/views/Login.vue')
+  },
+  {
+    path: '', // 匹配所有的内部路由
+    component: Layout,
+    children: originalRoutes
+  }
+];
 
 const router = new VueRouter({
   routes
+})
+
+// 添加全局前置路由守卫
+router.beforeEach((to, from, next) => {
+  const isLogin = sessionStorage.getItem('isLogin')
+  if (to.path !== '/login' && !isLogin) {
+    // 如果没有登录且访问的不是登录页，则跳转到登录页
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router
