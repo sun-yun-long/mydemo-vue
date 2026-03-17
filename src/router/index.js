@@ -163,6 +163,13 @@ const originalRoutes = [
         title: '五子棋',
         component: () => import("@/views/game/gobang"),
       },
+      {
+        id: '0307',
+        path: 'maze3d',
+        name: 'maze3d',
+        title: '3D迷宫',
+        component: () => import("@/views/game/maze3d"),
+      },
     ]
   },
   {
