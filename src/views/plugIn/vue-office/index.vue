@@ -10,22 +10,22 @@
       </div>
       <el-tabs v-model="activeName">
         <el-tab-pane label="Word (docx)" name="docx">
-          <vue-office-docx v-if="activeName === 'docx'" :src="docxUrl" style="height: 80vh;" @rendered="onRendered"
+          <vue-office-docx v-if="activeName === 'docx'" v-loading="loading" element-loading-text="文件加载中..." :src="docxUrl" style="height: 80vh;" @rendered="onRendered"
             @error="onError" />
         </el-tab-pane>
 
         <el-tab-pane label="Excel (xlsx)" name="excel">
-          <vue-office-excel v-if="activeName === 'excel'" :src="excelUrl" style="height: 80vh;" @rendered="onRendered"
+          <vue-office-excel v-if="activeName === 'excel'" v-loading="loading" element-loading-text="文件加载中..." :src="excelUrl" style="height: 80vh;" @rendered="onRendered"
             @error="onError" />
         </el-tab-pane>
 
         <el-tab-pane label="PDF" name="pdf">
-          <vue-office-pdf v-if="activeName === 'pdf'" :src="pdfUrl" style="height: 80vh;" @rendered="onRendered"
+          <vue-office-pdf v-if="activeName === 'pdf'" v-loading="loading" element-loading-text="文件加载中..." :src="pdfUrl" style="height: 80vh;" @rendered="onRendered"
             @error="onError" />
         </el-tab-pane>
 
         <el-tab-pane label="PPT (pptx)" name="pptx">
-          <vue-office-pptx v-if="activeName === 'pptx'" :src="pptxUrl" style="height: 80vh;" @rendered="onRendered"
+          <vue-office-pptx v-if="activeName === 'pptx'" v-loading="loading" element-loading-text="文件加载中..." :src="pptxUrl" style="height: 80vh;" @rendered="onRendered"
             @error="onError" />
         </el-tab-pane>
       </el-tabs>
@@ -55,15 +55,22 @@ export default {
   data() {
     return {
       activeName: 'docx',
+      loading: true,
       docxUrl: 'https://501351981.github.io/vue-office/examples/dist/static/test-files/test.docx',
       excelUrl: 'https://501351981.github.io/vue-office/examples/dist/static/test-files/test.xlsx',
       pdfUrl: 'https://501351981.github.io/vue-office/examples/dist/static/test-files/test.pdf',
       pptxUrl: 'https://501351981.github.io/vue-office/examples/dist/static/test-files/test.pptx'
     }
   },
+  watch: {
+    activeName() {
+      this.loading = true;
+    }
+  },
   methods: {
     handleFileChange(file) {
       if (!file || !file.raw) return;
+      this.loading = true;
       const rawFile = file.raw;
       const fileName = rawFile.name.toLowerCase();
 
@@ -95,9 +102,11 @@ export default {
       reader.readAsArrayBuffer(rawFile);
     },
     onRendered() {
+      this.loading = false;
       console.log('文件渲染完成')
     },
     onError() {
+      this.loading = false;
       console.error('文件渲染失败')
       this.$message.error('文件渲染失败，请检查链接或文件格式！')
     }
