@@ -118,6 +118,13 @@ const originalRoutes = [
         name: 'vue-virtual-scroller',
         component: () => import('@/views/plugIn/vueVirtualScroller')
       },
+      {
+        id: '0215',
+        path: 'vue-office',
+        name: 'vue-office',
+        title: '文件预览 (vue-office)',
+        component: () => import('@/views/plugIn/vue-office/index.vue')
+      },
     ]
   },
   {
